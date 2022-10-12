@@ -23,3 +23,16 @@ services:
       - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./localstack/bootstrap:/opt/bootstrap/
+
+  deploy:
+    image: node:16
+    environment:
+      - CDK_DEFAULT_REGION
+      - AWS_DEFAULT_REGION
+      - AWS_PROFILE
+    working_dir: /app
+    volumes:
+      - ${HOME}/.aws:/root/.aws
+      - .:/app
+    entrypoint: /bin/bash
+
