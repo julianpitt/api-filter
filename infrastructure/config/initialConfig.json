@@ -1,19 +1,76 @@
 {
-  "baseUrl": "https://jsonplaceholder.typicode.com",
+  "baseUrl": "https://test.sluet.wspdigitaltesting.com",
   "errorOnMissingKey": false,
   "filters": [
     {
       "method": "GET",
-      "path": "/todos",
+      "path": "/api/v1/giraffe/mcs_params",
       "filterPaths": [
-        "[].userId"
+        "site_suitability__NSW_government_land_owner",
+        "site_suitability__current_government_land_use",
+        "site_suitability__NSW_government_agency"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/giraffe/mcs_geojson",
+      "filterPaths": [
+        "features.[].properties.site_suitability__NSW_government_land_owner",
+        "features.[].properties.site_suitability__current_government_land_use",
+        "features.[].properties.site_suitability__NSW_government_agency"
       ]
     },
     {
       "method": "GET",
-      "path": "/todos/:id",
+      "path": "/api/v1/giraffe/gca_params",
       "filterPaths": [
-        "userId"
+        "targets",
+        "wellbeing",
+        "site_suitability[govt_property_register_area_by_department_breakdown,govt_property_register_by_zone_breakdown,govt_property_register_total_area,average_sqm_value_residential,average_sqm_value_commercial,average_sqm_value_industrial]"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/giraffe/gca_geojson",
+      "filterPaths": [
+        "livability.citizen_information.lga_wellbeing_overall_index",
+        "land_analyses.land_availability.govt_property_register_total_area",
+        "land_analyses.land_availability.govt_property_register_area_by_department_breakdown",
+        "land_analyses.land_availability.govt_property_register_by_zone_breakdown",
+        "land_analyses.land_valuation"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/giraffe/sp_impact_report",
+      "filterPaths": [
+        "target_access_to_transport",
+        "target_access_to_open_space_400m",
+        "target_access_to_open_space_800m",
+        "target_access_to_amenities",
+        "target_access_to_primary_school",
+        "target_vegetation_cover",
+        "wellbeing_importance_hospitals",
+        "wellbeing_importance_transport",
+        "wellbeing_importance_crime",
+        "wellbeing_importance_police",
+        "wellbeing_importance_green_space",
+        "wellbeing_importance_schools",
+        "wellbeing_importance_employment",
+        "wellbeing_importance_GPs",
+        "wellbeing_importance_roads",
+        "wellbeing_importance_services",
+        "wellbeing_satisfaction_hospitals",
+        "wellbeing_satisfaction_transport",
+        "wellbeing_satisfaction_crime",
+        "wellbeing_satisfaction_police",
+        "wellbeing_satisfaction_green_space",
+        "wellbeing_satisfaction_schools",
+        "wellbeing_satisfaction_employment",
+        "wellbeing_satisfaction_GPs",
+        "wellbeing_satisfaction_roads",
+        "wellbeing_satisfaction_services",
+        "wellbeing_overall_index"
       ]
     }
   ]
