@@ -116,7 +116,7 @@ export class InfrastructureStack extends cdk.Stack {
         {
           type: 'JSON_SCHEMA',
           content: fs
-            .readFileSync(path.resolve(__dirname, './appConfigJSONSchema.json'))
+            .readFileSync(path.resolve(__dirname, './config/appConfigJSONSchema.json'))
             .toString(),
         },
       ],
@@ -126,7 +126,7 @@ export class InfrastructureStack extends cdk.Stack {
       applicationId: appConfigApp.ref,
       configurationProfileId: appConfigProfile.ref,
       contentType: 'application/json',
-      content: fs.readFileSync(path.resolve(__dirname, './initialConfig.json')).toString(),
+      content: fs.readFileSync(path.resolve(__dirname, './config/initialConfig.json')).toString(),
     });
 
     const deploymentStrategy = new CfnDeploymentStrategy(this, 'appConfigDeploymentStrategy', {
