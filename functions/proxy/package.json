@@ -1,0 +1,25 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-lambda-powertools/tracer": "^1.2.1",
+    "@aws-sdk/client-appconfigdata": "^3.183.0",
+    "@aws-sdk/util-utf8-node": "^3.183.0",
+    "@middy/core": "^3.3.4",
+    "axios": "^0.27.2",
+    "jsonpath": "^1.1.1",
+    "path-to-regexp": "^6.2.1"
+  },
+  "devDependencies": {
+    "aws-sdk-client-mock": "^2.0.0",
+    "jest-date-mock": "^1.0.8"
+  }
+}

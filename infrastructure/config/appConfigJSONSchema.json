@@ -1,0 +1,107 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Proxy Config Schema",
+    "required": [
+        "errorOnMissingKey",
+        "filters",
+        "baseUrl"
+    ],
+    "properties": {
+        "baseUrl": {
+          "type": "string",
+          "title": "The baseUrl Schema",
+          "examples": [
+              "https://myapi.com"
+          ]
+        },
+        "errorOnMissingKey": {
+            "type": "boolean",
+            "default": false,
+            "title": "The errorOnMissingKey Schema",
+            "examples": [
+                false
+            ]
+        },
+        "filters": {
+            "type": "array",
+            "default": [],
+            "title": "The filters Schema",
+            "items": {
+                "type": "object",
+                "title": "A Schema",
+                "required": [
+                    "method",
+                    "path",
+                    "filterPaths"
+                ],
+                "properties": {
+                    "method": {
+                        "type": "string",
+                        "enum": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ],
+                        "title": "The method Schema",
+                        "examples": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    },
+                    "path": {
+                        "type": "string",
+                        "title": "The path Schema",
+                        "examples": [
+                            "/api/v1/me"
+                        ]
+                    },
+                    "filterPaths": {
+                        "type": "array",
+                        "title": "The filterPaths Schema",
+                        "items": {
+                            "type": "string",
+                            "title": "A Schema",
+                            "examples": [
+                                "age",
+                                "friends.[].age"
+                            ]
+                        },
+                        "examples": [
+                            [
+                                "age",
+                                "friends.[].age"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "examples": [{
+        "errorOnMissingKey": false,
+        "filters": [{
+            "method": "GET",
+            "path": "/api/v1/products",
+            "filterPaths": [
+                "name",
+                "price"
+            ]
+        },
+        {
+            "method": "POST",
+            "path": "/api/v1/me",
+            "filterPaths": [
+                "age",
+                "friends.[].age"
+            ]
+        }]
+    }]
+}

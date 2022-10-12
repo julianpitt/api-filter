@@ -1,0 +1,13 @@
+{
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "label": "npm: lint",
+      "detail": "eslint --quiet --ext .ts --ext .tsx --ignore-pattern node_modules/ ."
+    }
+  ]
+}

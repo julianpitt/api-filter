@@ -1,0 +1,42 @@
+{
+  "name": "infrastructure",
+  "version": "0.1.0",
+  "bin": {
+    "infrastructure": "bin/infrastructure.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "postinstall": "npm --prefix ./functions/proxy install",
+    "invoke": "cdk synth && sam local invoke -t cdk.out/InfrastructureStack.template.json",
+    "invoke:proxy": "npm run invoke -- proxyFunction | tail -1 | jq",
+    "start:api": "cdk synth && sam local start-api -t cdk.out/InfrastructureStack.template.json --warm-containers EAGER",
+    "logs:proxy": "sam logs --stack-name InfrastructureStack"
+  },
+  "devDependencies": {
+    "@aws-sdk/types": "^3.183.0",
+    "@types/aws-lambda": "^8.10.103",
+    "@types/jest": "^27.5.2",
+    "@types/jsonpath": "^0.2.0",
+    "@types/node": "10.17.27",
+    "@types/prettier": "2.6.0",
+    "aws-cdk": "2.41.0",
+    "aws-sdk-client-mock": "^2.0.0",
+    "jest": "^27.5.1",
+    "jest-date-mock": "^1.0.8",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.9.1",
+    "typescript": "~4.5.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.41.0",
+    "axios": "^0.27.2",
+    "constructs": "^10.0.0",
+    "esbuild": "^0.15.8",
+    "jsonpath": "^1.1.1",
+    "msw": "^0.47.3",
+    "source-map-support": "^0.5.21"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "baseUrl": "https://jsonplaceholder.typicode.com",
+  "errorOnMissingKey": false,
+  "filters": [
+    {
+      "method": "GET",
+      "path": "/todos",
+      "filterPaths": [
+        "[].userId"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/todos/:id",
+      "filterPaths": [
+        "userId"
+      ]
+    }
+  ]
+}
