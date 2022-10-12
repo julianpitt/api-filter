@@ -4,10 +4,10 @@
 
 - **[1. Motivation](#heading--1)**
 - **[2. How it works](#heading--2)**
-  - [2.1. Architecture](#heading--2-1)
+    - [2.1. Architecture](#heading--2-1)
 - **[3. Adoption](#heading--3)**
-  - [3.1. Deployment](#heading--3-1)
-  - [3.2. Configuration](#heading--3-2)
+    - [3.1. Deployment](#heading--3-1)
+    - [3.2. Configuration](#heading--3-2)
 
 ---
 
@@ -15,11 +15,13 @@
 
 ## 1. Motivation
 
-This solution outlines how you can apply response filtering to a preexisting application using AWS Services.
+This solution outlines how you can apply response filtering to a preexisting application using AWS
+Services.
 
 The solution is configurable without an application deploy.
 
-This solution is handy when you have a closed source API that you need to filter responses on based on a parameter or header condition being met. i.e. filtering reponses based on user group.
+This solution is handy when you have a closed source API that you need to filter responses on based
+on a parameter or header condition being met. i.e. filtering reponses based on user group.
 
 ---
 
@@ -34,23 +36,32 @@ This solution is handy when you have a closed source API that you need to filter
 ![Architecture Diagram](./documentation/ArchitectureDiagram.png)
 
 1. The Admin configures the routes that will need filtering on their application router
-2. The Admin adds filtering rules to app config, specifying the routes to filter on and what to filter out of the responses.
+2. The Admin adds filtering rules to app config, specifying the routes to filter on and what to
+   filter out of the responses.
 3. The client makes an API request
-4. a) The request made by the client does not require filtering and is passed directly to the downstream API. The full response is returned to the application router for the client to consume.
+4. a) The request made by the client does not require filtering and is passed directly to the
+   downstream API. The full response is returned to the application router for the client to
+   consume.
 
    b) The request made by the client requires filtering and is passed to the Api Gateway
 
 5. The Api Gateway passes all requests to the getApplicaitonConfig function.
 
-6. a) On cold start, the function retrieves the filtering configuration from AppConfig and stores a cached copy in memory.
+6. a) On cold start, the function retrieves the filtering configuration from AppConfig and stores a
+   cached copy in memory.
 
-   b) On warm start, the function already has a cached copy of the rules from AppConfig. The function checks if it needs to retrieve an updated copy of the config if the poll timeout has elapsed.
+   b) On warm start, the function already has a cached copy of the rules from AppConfig. The
+   function checks if it needs to retrieve an updated copy of the config if the poll timeout has
+   elapsed.
 
-7. The function calls the downstream Api passing all the same headers, body and query string parameters from the original request.
+7. The function calls the downstream Api passing all the same headers, body and query string
+   parameters from the original request.
 
-8. The function waits for a response then applies the filtering rules to the response and returns it to the Api Gateway
+8. The function waits for a response then applies the filtering rules to the response and returns it
+   to the Api Gateway
 
-9. The Api Gateway returns the filtered response to the application router for the client to consume.
+9. The Api Gateway returns the filtered response to the application router for the client to
+   consume.
 
 ---
 
@@ -66,9 +77,13 @@ The following steps are for Linux/Mac
 
 1. Install the following dependencies on your local machine:
 
-   - [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
-   - NodeJS v16, [use nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+    - [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
+    - NodeJS v16, [use nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
+   Alternatively, run inside a container:
+   ```bash
+    docker-compose run --rm deploy
+   ```
 1. Open a terminal in the current directory and install the application dependencies
 
    ```bash
@@ -80,6 +95,8 @@ The following steps are for Linux/Mac
    ```bash
    export AWS_PROFILE={YOUR PROFILE NAME}
    export AWS_REGION={YOUR AWS ACCOUNT REGION}
+   export PROJECT={THE NAME OF YOUR PROJECT}
+   export ENVIRONMENT={THE NAME OF YOUR ENVIRONMENT}
    ```
 
 1. Bootstrap the CDK toolset in the account you wish to deploy the application into
@@ -90,7 +107,7 @@ The following steps are for Linux/Mac
 
 1. Deploy the application into your account
    ```bash
-   npx cdk deploy
+   npx cdk deploy -c ProjectName=${PROJECT} -c EnvironmentName=${ENVIRONMENT}
    ```
 
 <div id="heading--3-2" />
@@ -98,7 +115,8 @@ The following steps are for Linux/Mac
 ### 3.2.1 Configuration
 
 This application uses AppConfig to store runtime configuration items.
-On first deploy, [an initial configuration file](./infrastructure//config//initialConfig.json) will be used as v1. Feel free to modify the inital configuration items prior to the first deploy.
+On first deploy, [an initial configuration file](./infrastructure//config//initialConfig.json) will
+be used as v1. Feel free to modify the inital configuration items prior to the first deploy.
 
 Subsequent configuration updates can be modified through the AppConfig AWS console.
 
@@ -122,11 +140,14 @@ A filter object contains the following properties:
 - path - the path to apply the filter rules to
 - filterPaths - an array of filter rules to apply to the returned object from the downstream api
 
-The filter rules will only apply when both the method and path match the incomming requests method and path.
+The filter rules will only apply when both the method and path match the incomming requests method
+and path.
 
 ### 3.2.3 Filter rules
 
-Filter Rules correspond to the property path on the returning JSON opject from the downstream API. Each filter rule will apply to a single property on an object or multiple array values. All rules and array values are case sensitive.
+Filter Rules correspond to the property path on the returning JSON opject from the downstream API.
+Each filter rule will apply to a single property on an object or multiple array values. All rules
+and array values are case sensitive.
 
 #### Basic filtering
 
@@ -149,7 +170,8 @@ The resulting object will be
 
 #### Nested object filtering
 
-Period "." can be used to denote a nested property on an object. e.g. the filter rule `"hello.world"` will filter out the property named world on the object hello as follows
+Period "." can be used to denote a nested property on an object. e.g. the filter
+rule `"hello.world"` will filter out the property named world on the object hello as follows
 
 ```json
 {
@@ -174,8 +196,10 @@ The resulting object will be
 
 #### Nested collection filtering
 
-Object properties residing in an array can also be removed. To filter a property from an object, you will need to use the ".[]." filterPath to denote an array.
-e.g. the filter rule `"hello.worlds.[].name" will filter out all the name properties on objects in the world array.
+Object properties residing in an array can also be removed. To filter a property from an object, you
+will need to use the ".[]." filterPath to denote an array.
+e.g. the filter rule `"hello.worlds.[].name" will filter out all the name properties on objects in
+the world array.
 
 ```json
 {
@@ -221,11 +245,19 @@ The resulting object will be
 
 #### Array value filtering
 
-Basic Array values (strings, numbers, boolean) can also be filtered out by typing the values to remove separated by a comma inside of the array object. e.g. a filter rule of `"hello.[Hannah,Ross]"` with the following object:
+Basic Array values (strings, numbers, boolean) can also be filtered out by typing the values to
+remove separated by a comma inside of the array object. e.g. a filter rule
+of `"hello.[Hannah,Ross]"` with the following object:
 
 ```json
 {
-  "hello": ["Julian", "Ben", "Hannah", "Ross", "Noor"]
+  "hello": [
+    "Julian",
+    "Ben",
+    "Hannah",
+    "Ross",
+    "Noor"
+  ]
 }
 ```
 
@@ -233,13 +265,19 @@ Will result in the following object being returned
 
 ```json
 {
-  "hello": ["Julian", "Ben", "Noor"]
+  "hello": [
+    "Julian",
+    "Ben",
+    "Noor"
+  ]
 }
 ```
 
 #### Combining filters
 
-The `filterPath` configuration property is an array that accepts any of the above filter rules and will apply the rules in order. If a rule doesn't match the object, it will be ignored and the next rule will be evaluated unless the `errorOnMissingKey` property is set to `true`.
+The `filterPath` configuration property is an array that accepts any of the above filter rules and
+will apply the rules in order. If a rule doesn't match the object, it will be ignored and the next
+rule will be evaluated unless the `errorOnMissingKey` property is set to `true`.
 
 e.g. Combining multiple filterPath rules
 
@@ -269,7 +307,11 @@ e.g. Combining multiple filterPath rules
     {
       "name": "Julian",
       "age": 100,
-      "addresses": ["hope st", "dawn rd", "hello world"],
+      "addresses": [
+        "hope st",
+        "dawn rd",
+        "hello world"
+      ],
       "friends": [
         {
           "name": "Ross",
@@ -280,7 +322,10 @@ e.g. Combining multiple filterPath rules
     {
       "name": "Ross",
       "age": 120,
-      "addresses": ["country town", "fake place"],
+      "addresses": [
+        "country town",
+        "fake place"
+      ],
       "friends": [
         {
           "name": "Julian",
@@ -299,11 +344,17 @@ Will result in the following object being returned
   "users": [
     {
       "name": "Julian",
-      "addresses": ["hope st", "dawn rd"]
+      "addresses": [
+        "hope st",
+        "dawn rd"
+      ]
     },
     {
       "name": "Ross",
-      "addresses": ["country town", "fake place"]
+      "addresses": [
+        "country town",
+        "fake place"
+      ]
     }
   ]
 }
